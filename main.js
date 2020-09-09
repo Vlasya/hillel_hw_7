@@ -1,26 +1,35 @@
-// Покупатель выбирает товары и добавляет их в корзину.
-// let selected = [
-//  ['product_1', 20],
-//  ['product_2', 45],
-//  ['product_3', 67],
-//  ['product_4', 75],
+// We have an array of arrays. Each array represents a pet. The pets have a name, an age, and a type.
+// let pets = [
+//   ['Butters', 3, 'dog'],
+//   ['Lizzy', 6, 'dog'],
+//   ['Red', 1, 'cat'],
+//   ['Joey', 3, 'dog'],
 // ];
-// Необходимо вычислить общую стоимость товаров и выставить покупателю счёт. Магазин у вас интернациональный и каждый клиент получает перечень выбранных товаров со всеми доступными типами валют. В первоначальном виде массива цена представлена в гривнах. На выходе необходимо предоставить пользователю таблицу с преобразованного массива вида:
-// let totalPrice = [
-//  ['product_1', ['rubles',1437], ['dollars', 20.06], ['euros', 18.18], ['yens', 2266.20], ['pounds', 14.15]],
-//  ...
-// ];
-// Курс валют:
-// rubles = 2,73;
-// dollars = 0,036;
-// euros = 0,030;
-// yens = 3,80;
-// pounds = 0,028;
+// Task:
+// Select only the dogs
+// Translate their ages into dog years (multiply them by seven)
+// Sum the results
 
 
-let selected = [
-	['product_1', 20],
-	['product_2', 45],
-	['product_3', 67],
-	['product_4', 75],
-  ];
+let pets = [
+	
+	['Butters', 3, 'dog'],
+	['Lizzy', 6, 'dog'],
+	['Red', 1, 'cat'],
+	['Joey', 3, 'dog'],
+ ];
+// Select only the dogs
+let myPets= pets.filter(item=>item[2]==='dog')
+// Translate their ages into dog years (multiply them by seven)
+ 						.map(el =>{
+							el[1]=el[1]*7
+							return el
+						 }) 
+//  Sum the results
+						.reduce((summ,item) =>{
+							summ+=item[1]
+							return summ
+						},0)
+
+
+ console.log('Сумма псиных годиков : ', myPets);
