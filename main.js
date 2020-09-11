@@ -4,10 +4,12 @@
 let string='helloworld'
 let string2=string.split('')
 
-newArr=[];
+newArr={};
 string2.map(item=>{
 	!newArr[item]?newArr[item]=1:newArr[item]+=1;
 	return newArr
 })
 
 console.log(newArr);
+
+
