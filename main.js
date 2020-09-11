@@ -1,12 +1,13 @@
 // Count the frequency of each character in the string 'helloworld'
+
+
 let string='helloworld'
+let string2=string.split('')
 
-let character =string.split('');
-console.log('character: ', character);
+newArr=[];
+string2.map(item=>{
+	!newArr[item]?newArr[item]=1:newArr[item]+=1;
+	return newArr
+})
 
-function count (item){
-	var count=0
-	for
-}
-
-
+console.log(newArr);
