@@ -1,10 +1,6 @@
-// Дано:
-// Массив видов спорта sports, который состоит из [Иконка вида спорта, Название вида спорта];
-// Массив стран победителей на Олимпийских играх в каждом виде спорта winners, который состоит из [Название вида спорта, Завоеванная медаль, Страна];
-// Массив колец с Олимпийской эмблемы olympic, который состоит из [Иконка олимпийского кольца];
-// Массив медалей medals, который состоит из [Иконка медали, Название медали];
-// Массив стран и континентов continents, который состоит из [Название страны, Название контента];
-const sports = [
+// Objects Practice
+
+let sports = [
 	['1F93A','fencing'],
 	['26F8','figure skating'],
 	['26F7','skier'],
@@ -16,7 +12,7 @@ const sports = [
 	['1F93E','handball']
 ];
 
-const winners = [
+let winners = [
 	['fencing','gold','fr'],
 	['fencing','silver','it'],
 	['fencing','bronze','us'],
@@ -54,16 +50,22 @@ const winners = [
 	['handball','bronze','de'],
 ];
 
-const olympic = ['1F535','26AB','1F534','1F7E1','1F7E2'];
+let olympic = [
+	'1F535',
+	'26AB',
+	'1F534',
+	'1F7E1',
+	'1F7E2'
+];
 
-const medals = [
+let medals = [
 	['1F947','gold'],
 	['1F948','silver'],
 	['1F949','bronze'],
 ];
 
-const continents = [
-	['fr','Europe'], 
+let continents = [
+	['fr','Europe'],
 	['it','Europe'],
 	['us','The Americas'],
 	['ca','The Americas'],
@@ -78,243 +80,103 @@ const continents = [
 	['dk','Europe'],
 	['de','Europe']
 ];
-// Необходимо вывести таблицу победителей Олимпийских игр в соответствии с видом спорта и континентом команды. Пример таблицы в прикрепленном рисунке.
 
-// Метод для преобразования unicode вида спорта в соответствующую иконку – String.fromCodePoint(parseInt(val, 16)); где val – unicode вида спорта.
+// String.fromCodePoint(parseInt(val, 16));
+// 'ca'.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0)+127397));
 
-// Метод для преобразования аббревиатуры страны в соответствующую иконку флага – 'ca'.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0)+127397)); где 'ca' – аббревиатура страны (Canada).
-// Синее кольцо — это Европа. Красное — Америка. Жёлтое — Азия. Чёрное — Африка. Зелёное, естественно, Австралия
-// Преобразование видов спорта
-let sportIcon=sports.map(item =>{
-	return item[0]=String.fromCodePoint(parseInt(item, 16))});
-console.log('sportIcon',sportIcon);
+function getIcon(value){
+	return String.fromCodePoint(parseInt(value, 16));
+}
 
-// Преобразование континентов
-let olympicIcon=olympic.map(item =>{
-	return item[0]=String.fromCodePoint(parseInt(item, 16))});
-	console.log('olympicIcon: ', olympicIcon);
+function getContinentName(country){
+	let getContinent = continents
+		.filter(function(continent){
+			return continent[0] === country;
+		});
+	return getContinent[0][1];
+}
 
-	// Преобразование медалек
-let medalIcon=medals.map(item =>{
-	return item[0]=String.fromCodePoint(parseInt(item, 16))});
-	console.log('medalIcon: ', medalIcon);
+function renderTableThead(){
+	let olympicIcons = olympic
+		.map(function(olympicItem){
+			return `<th>${getIcon(olympicItem)}</th>`;
+		})
+		.join('');
 
-	// Преобразование иконок( чего-то они не работают,выводит текстом ,перепробовала разные варианты из инета,ни один не захотел :( ) ,названий континентов
-let continentsIcon =continents.map(item =>{
-	return item[0]=item[0].toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0)+127397) );
-});
-console.log('continentsIcon: ', continentsIcon);
+	return `<thead><th></th>${olympicIcons}</thead>`;
+}
 
-// Выводим название(иконки) континентов в таблицу 
-olympicIconWrite='';										
-olympicIcon.forEach(function(el) {
-	olympicIconWrite+=`<td>${el}</td>`
-});
+function renderTableTbody(){
+	let trs = sports
+		.map(function(sport){
 
+			let td_Europe=td_Africa=td_Americas=td_Asia=td_Oceania=``;
 
+			let sportWinner = winners
+				.filter(function(winner){
+					return winner[0] === sport[1]
+				})
+				.map(function(winner){
+					let continentName = getContinentName(winner[2]);					
+					switch(continentName){
+						case 'Europe':
+							td_Europe += renderWinner(winner);
+							break;
+						case 'Africa':
+							td_Africa += renderWinner(winner);
+							break;
+						case 'The Americas':
+							td_Americas += renderWinner(winner);
+							break;
+						case 'Asia':
+							td_Asia += renderWinner(winner);
+							break;
+						case 'Oceania':
+							td_Oceania += renderWinner(winner);
+							break;
+					}
+					return renderWinner(winner);
+				});
 
-
-// Выводим все
-
-document.write(
-	`<table class="table">
-	<thead>
-	<tr><td></td>${olympicIconWrite}</tr>
-	</thead>
-	<tbody>
-	<tr>
-	<td>${sportIcon[0]}</td>
-	<td>
-		<table class="int">
+			return `
 			<tr>
-				<td class="gold">${medalIcon[0]}-${continentsIcon[0]}</td>
-			</tr>
-			<tr>
-				<td class="silver">${medalIcon[1]}-${continentsIcon[1]}</td>
-			</tr>
-		</table>
-	</td>
-	<td></td>
-	<td>
-		<table class="int">
-					<tr>
-						<td></td>
-					</tr>
-					<tr>
-					<td class="bronze"> ${medalIcon[2]}-${continentsIcon[2]}</td>
-					</tr>
-					<tr>
-					<td></td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[1]}</td>
-	<td>
-		<table class="int">
-					<tr>
-						<td></td>
-					</tr>
-					<tr>
-					<td class="silver">${medalIcon[1]}-${continentsIcon[4]}</td>
-					</tr>
-					<tr>
-					<td></td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td>
-		<table class="int">
-				<tr >
-					<td  class="gold">${medalIcon[0]}-${continentsIcon[3]}</td>
-				</tr>
-				<tr>
-					<td class="silver">${medalIcon[2]}-${continentsIcon[2]}</td>
-				</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[2]}</td>
-	<td>
-		<table class="int">
-					<tr >
-						<td  class="gold">${medalIcon[0]}-${continentsIcon[5]}</td>
-					</tr>
-					<tr>
-						<td class="silver">${medalIcon[1]}-${continentsIcon[4]}</td>
-					</tr>
-					<tr>
-						<td class="bronze">${medalIcon[2]}-${continentsIcon[0]}</td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[3]}</td>
-	<td></td>
-	<td></td>
-	<td  class="gold">${medalIcon[0]}-${continentsIcon[2]}</td>
-	<td class="silver">${medalIcon[1]}-${continentsIcon[6]}</td>
-	<td class="bronze">${medalIcon[2]}-${continentsIcon[7]}</td>
-	</tr>
-	<tr>
-	<td>${sportIcon[4]}</td>
-	<td>
-		<table class="int">
-					<tr >
-						<td  class="gold">${medalIcon[0]}-${continentsIcon[8]}</td>
-					</tr>
-					<tr>
-						<td class="silver">${medalIcon[1]}-${continentsIcon[9]}</td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td>
-		<table class="int">
-					<tr >
-						<td></td>
-					</tr>
-					<tr>
-					<td class="bronze">${medalIcon[2]}-${continentsIcon[2]}</td>
-					</tr>
-					<tr>
-						<td></td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[5]}</td>
-	<td>
-		<table class="int">
-						<tr >
-							<td  class="silver">${medalIcon[1]}-${continentsIcon[8]}</td>
-						</tr>
-						<tr>
-							<td class="bronze">${medalIcon[2]}-${continentsIcon[10]}</td>
-						</tr>
-		</table>
-	</td>
-	<td></td>
-	<td>
-		<table class="int">
-					<tr >
-						<td></td>
-					</tr>
-					<tr>
-					<td class="gold">${medalIcon[0]}-${continentsIcon[2]}</td>
-					</tr>
-					<tr>
-						<td></td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[6]}</td>
-	<td class="silver">${medalIcon[1]}-${continentsIcon[8]}</td>
-	<td></td>
-	<td class="gold">${medalIcon[0]}-${continentsIcon[2]}</td>
-	<td></td>
-	<td class="bronze">${medalIcon[2]}-${continentsIcon[7]}</td>
-	</tr>
-	<tr>
-	<td>${sportIcon[7]}</td>
-	<td>
-		<table class="int">
-					<tr >
-						<td  class="gold">${medalIcon[0]}-${continentsIcon[4]}</td>
-					</tr>
-					<tr>
-						<td class="silver">${medalIcon[1]}-${continentsIcon[4]}</td>
-					</tr>
-					<tr>
-						<td class="bronze">${medalIcon[2]}-${continentsIcon[11]}</td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td>${sportIcon[8]}</td>
-	<td>
-		<table class="int">
-					<tr >
-						<td  class="gold">${medalIcon[0]}-${continentsIcon[12]}</td>
-					</tr>
-					<tr>
-						<td class="silver">${medalIcon[1]}-${continentsIcon[0]}</td>
-					</tr>
-					<tr>
-						<td class="bronze">${medalIcon[2]}-${continentsIcon[13]}</td>
-					</tr>
-		</table>
-	</td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	</tr>
-	</tbody>
-	</table>`)
+				<td>${getIcon(sport[0])}</td>
+				<td data-name="Europe">${td_Europe}</td>
+				<td data-name="Africa">${td_Africa}</td>
+				<td data-name="The Americas">${td_Americas}</td>
+				<td data-name="Asia">${td_Asia}</td>
+				<td data-name="Oceania">${td_Oceania}</td>
+			</tr>`;
+		})
+		.join('');
+	return `<tbody>${trs}</tbody>`;
+}
+
+function renderWinner(winner){
+	let medalView = medals
+		.filter(function(medal){
+			return medal[1] === winner[1];
+		})
+		.map(function(medal){
+			return getIcon(medal[0])
+		})
+		.toString();
+	let flagView = winner[2].toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0)+127397));
+	return `<div class="${winner[1]}">${medalView} – ${flagView}</div>`;
+}
+
+function renderTable(){
+	let table = `
+	<table class="table">
+		${renderTableThead()}
+		${renderTableTbody()}
+	</table>`;
+
+	return table;
+}
+
+document.write(renderTable());
+
+
 
 
